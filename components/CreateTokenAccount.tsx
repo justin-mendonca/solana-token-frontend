@@ -1,25 +1,25 @@
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import * as web3 from "@solana/web3.js";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { FC, useState } from "react";
-import styles from "../styles/Home.module.css";
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import * as web3 from '@solana/web3.js';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { FC, useState } from 'react';
+import styles from '../styles/Home.module.css';
 
 import {
   getAssociatedTokenAddress,
   TOKEN_PROGRAM_ID,
   ASSOCIATED_TOKEN_PROGRAM_ID,
   createAssociatedTokenAccountInstruction,
-} from "@solana/spl-token";
+} from '@solana/spl-token';
 
 export const CreateTokenAccountForm: FC = () => {
-  const [txSig, setTxSig] = useState("");
-  const [tokenAccount, setTokenAccount] = useState("");
+  const [txSig, setTxSig] = useState('');
+  const [tokenAccount, setTokenAccount] = useState('');
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
   const link = () => {
     return txSig
       ? `https://explorer.solana.com/tx/${txSig}?cluster=devnet`
-      : "";
+      : '';
   };
 
   const createTokenAccount = async (event) => {
@@ -27,19 +27,28 @@ export const CreateTokenAccountForm: FC = () => {
     if (!connection || !publicKey) {
       return;
     }
-    const mint = new web3.PublicKey(event.target.mint.value)
+    const mint = new web3.PublicKey(event.target.mint.value);
 
-    const associatedTokenAddress = await getAssociatedTokenAddress(mint, publicKey, false)
+    const associatedTokenAddress = await getAssociatedTokenAddress(
+      mint,
+      publicKey,
+      false
+    );
 
-    setTokenAccount(associatedTokenAddress.toBase58())
-    
+    setTokenAccount(associatedTokenAddress.toBase58());
+
     const transaction = new web3.Transaction().add(
-      createAssociatedTokenAccountInstruction(publicKey, associatedTokenAddress, publicKey, mint)
-    )
+      createAssociatedTokenAccountInstruction(
+        publicKey,
+        associatedTokenAddress,
+        publicKey,
+        mint
+      )
+    );
 
-    const tx = await sendTransaction(transaction, connection)
+    const tx = await sendTransaction(transaction, connection);
 
-    setTxSig(tx)
+    setTxSig(tx);
   };
 
   return (

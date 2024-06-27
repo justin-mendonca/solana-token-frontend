@@ -27,8 +27,8 @@ export const CreateMintForm: FC = () => {
       return;
     }
 
-    const accountKeypair = web3.Keypair.generate()
-    const lamports = await getMinimumBalanceForRentExemptMint(connection)
+    const accountKeypair = web3.Keypair.generate();
+    const lamports = await getMinimumBalanceForRentExemptMint(connection);
 
     const transaction = new web3.Transaction().add(
       web3.SystemProgram.createAccount({
@@ -47,9 +47,11 @@ export const CreateMintForm: FC = () => {
       )
     );
 
-    const tx = await sendTransaction(transaction, connection, { signers: [accountKeypair]})
-    setTxSig(tx)
-    setMint(accountKeypair.publicKey.toString())
+    const tx = await sendTransaction(transaction, connection, {
+      signers: [accountKeypair],
+    });
+    setTxSig(tx);
+    setMint(accountKeypair.publicKey.toString());
   };
 
   return (
